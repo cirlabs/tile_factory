@@ -1,4 +1,4 @@
-tile_factory
+tile_factory: Dirty map tiles, done dirt cheap.
 ============
 
 Stuff to help move tiles from TileMill to S3 for use in slippy maps.
