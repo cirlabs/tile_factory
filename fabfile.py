@@ -62,11 +62,11 @@ def copy_map_dirs(map):
     Sets up dirs for map, copies .mbtiles file
     """
     print 'Making map directory: ' + map
-    command = 'mkdir -p tiles_' + map
+    command = 'mkdir -p ' + PROJECT_DIRECTORY + 'tiles_' + map
     local(command)
 
     #print 'Copying .mbtiles file: ' + map
-    command = 'cp ' + PROJECT_DIRECTORY + map + '.mbtiles ' + PROJECT_DIRECTORY + 'tiles_' + map
+    command = 'cp ' + PROJECT_DIRECTORY + map + '.mbtiles ' + PROJECT_DIRECTORY + 'tiles_' + map + '/'
     local(command)
 
 
@@ -80,7 +80,7 @@ def extract_tiles(map):
 
     print 'Running mb-util for map: ' + map
     #command = 'mb-util ' + map + '.mbtiles ' + PROJECT_DIRECTORY + ' ' + PROJECT_DIRECTORY + 'tiles_' + map + '/rendered_tiles'
-    command = 'mb-util ' + PROJECT_DIRECTORY + 'tiles_' + map + '/' + map + '.mbtiles rendered_tiles'
+    command = 'mb-util ' + PROJECT_DIRECTORY + 'tiles_' + map + '/' + map + '.mbtiles ' + PROJECT_DIRECTORY + 'rendered_tiles'
     local(command)
 
     print 'Moving json file into rendered_tiles'
