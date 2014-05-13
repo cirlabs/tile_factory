@@ -5,6 +5,23 @@ Stuff to help move tiles from TileMill to S3 for use in slippy maps.
 
 Heavily based on this (with some modifications): http://www.minnpost.com/data/2012/03/how-we-built-same-day-registration-map
 
+###Creating the virtual environment
+There's a little bit of a trick. Some packages are better installed globally, some in the environment.
+
+```
+mkvirtualenv --system-site-packages tile_factory
+deactivate
+pip install -r requirements_global.txt
+
+workon tile_factory
+pip install -r requirements_env.txt
+deactivate
+
+workon tile_factory
+
+```
+Annnnd you're done.
+
 ###The process
 * Make tiles in TileMill.
 
@@ -58,4 +75,21 @@ var gridlayer = L.mapbox.gridLayer(my_tilejson);  // Only if you have accompanyi
 var layergroup = L.layerGroup([tilelayer, gridlayer]);
 layergroup.addTo(map);
 
+```
+
+###Deleting large tilesets
+
+Deleting tens of thousands of tiles on S3 takes a long time. This command, based on @onyxfish's invar library, deletes everything in matching subfolders in chunks of 1,000 keys at a time, and in 64 concurrent threads at a time to speed things up even more.
+
+WARNING: Use with extreme caution. This will wipe out every match it finds, no takebacks.
+
+```
+# local_config.py
+DELETE_LIST = [] # Put map project folder names here
+DELETE_BUCKET = 's3.bucket.name'
+DELETE_BASE_DIRECTORY = 'everything/before/your/project/name'
+DELETE_VERSION = '1.0.0'
+
+# Use with extreme caution
+$ fab delete_all
 ```
