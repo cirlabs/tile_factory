@@ -1,3 +1,4 @@
 #Things that can be installed inside a virtualenv
-fabric
-
+Fabric==1.8.0
+boto
+eventlet

@@ -16,6 +16,11 @@ AWS_ACCESS_KEY_ID = ''
 AWS_SECRET_ACCESS_KEY = ''
 VERSION = '1.0.0'
 
+DELETE_LIST = []  # List of map tile folders to delete.
+DELETE_BUCKET = 'your.bucket.name'
+DELETE_BASE_DIRECTORY = 'file/path/inside/that/bucket'
+DELETE_VERSION = '1.0.0'
+
 # Generally, don't specify those variables above, use a separate file (not committed) called local_config.py
 try:
     from local_config import *
@@ -47,6 +52,15 @@ def deploy_all():
         extract_tiles(map)
         deploy_map(map)
         deploy_json(map)
+
+
+def delete_all():
+    """
+    Deletes everything in the DELETE_LIST. Use with extreme caution.
+    """
+
+    for map in DELETE_LIST:
+        delete_tileset(map)
 
 
 def deploy_json(map):
@@ -116,4 +130,17 @@ def deploy_map(map):
         print 'Deploying map: ' + map
         #command = 's3cmd put --recursive -P ' + PROJECT_DIRECTORY + 'tiles_' + map + '/rendered_tiles/ ' + S3_DIRECTORY_S3CMD
         command = 'ivs3 --concurrency 64 --acl-public ' + PROJECT_DIRECTORY + 'tiles_' + map + '/rendered_tiles/ ' + S3_DIRECTORY + map + '/' + VERSION
+        local(command)
+
+
+def delete_tileset(map):
+    """
+    Concurrently deletes giant tileset folders
+    """
+
+    with shell_env(AWS_ACCESS_KEY_ID=AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY=AWS_SECRET_ACCESS_KEY):
+
+        print "Deleting map: " + map
+
+        command = 'python ivs3_delete.py --concurrency 64 ' + DELETE_BUCKET + ' ' + DELETE_BASE_DIRECTORY + '/' + map + '/' + DELETE_VERSION + '/'
         local(command)
