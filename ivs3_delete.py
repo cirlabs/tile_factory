@@ -50,9 +50,11 @@ class IVS3_Delete(invar.InvarUtility):
             print "Can't do it. Not enouch specified. You'll nuke the kernel."
 
     def delete(self, keys_to_delete):  # Take chunks of up to 1,000 and delete them en masse.
-        print 'Deleting keys beginning with: %s' % keys_to_delete[0]
-        print 'BANG BANG DELETE ......................'
-        #self.bucket.delete_keys(keys_to_delete)
+        #print 'Deleting keys beginning with: %s' % keys_to_delete[0]
+        #print 'BANG BANG DELETE ......................'
+        result = self.bucket.delete_keys(keys_to_delete)
+        if len(result.errors) > 0:
+            print 'ERROR ERROR ERROR: %s' % result.errors[0]
 
         print 'Deleted %s keys' % len(keys_to_delete)
 
