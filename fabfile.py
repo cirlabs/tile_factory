@@ -16,10 +16,9 @@ AWS_ACCESS_KEY_ID = ''
 AWS_SECRET_ACCESS_KEY = ''
 VERSION = '1.0.0'
 
-DELETE_LIST = []  # List of map tile folders to delete.
+DELETE_LIST = []  # List of map tile folders to delete, including version if present.
 DELETE_BUCKET = 'your.bucket.name'
 DELETE_BASE_DIRECTORY = 'file/path/inside/that/bucket'
-DELETE_VERSION = '1.0.0'
 
 # Generally, don't specify those variables above, use a separate file (not committed) called local_config.py
 try:
@@ -142,5 +141,5 @@ def delete_tileset(map):
 
         print "Deleting map: " + map
 
-        command = 'python ivs3_delete.py --concurrency 64 ' + DELETE_BUCKET + ' ' + DELETE_BASE_DIRECTORY + '/' + map + '/' + DELETE_VERSION + '/'
+        command = 'python ivs3_delete.py --concurrency 64 ' + DELETE_BUCKET + ' ' + DELETE_BASE_DIRECTORY + '/' + map + '/'
         local(command)

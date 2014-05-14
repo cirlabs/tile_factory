@@ -43,6 +43,8 @@ class IVS3_Delete(invar.InvarUtility):
                     pile.spawn(self.delete, keys_to_delete)
                     keys_to_delete = []
 
+            pile.spawn(self.delete, keys_to_delete)  # Pick up stragglers
+
             # Wait for all greenlets to finish
             list(pile)
 
