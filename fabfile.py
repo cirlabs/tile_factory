@@ -1,4 +1,8 @@
 #!/usr/bin/env python
+import glob
+import re
+import os
+
 from fabric.api import local, shell_env
 
 """
@@ -130,6 +134,27 @@ def extract_grids(rootpath, minzoom, maxzoom):
     #move whole shebang back out of full directory structure
     local('mv ' + rootpath + '/extracted_grids_temp' + rootpath + ' ' + rootpath + '/extracted_grids')
     local('rm -rf ' + rootpath + '/extracted_grids_temp')
+
+
+def insert_grids(source, destination, minzoom, maxzoom):
+
+    """
+    Grabs UTFGrid files from given zoom levels in one location and puts them in destination directory, overwriting existing files if necessary
+    """
+    zoomrange = range(int(minzoom), int(maxzoom)+1)
+    for z in zoomrange:
+        find_regex = r'%s/%s/*/*.json' % (source, z,)
+        matching_files = glob.glob(find_regex)
+        for m in matching_files:
+            match_re = r'.+/([0-9]{1,2})/([0-9]{1,10})/(.+\.json)'
+            destination_dir = re.sub(match_re, '%s/\\1/\\2' % (destination,), m)
+            destination_file = re.sub(match_re, '%s/\\1/\\2/\\3' % (destination,), m)
+            #check if directory exists
+            if os.path.isdir(destination_dir):
+                local('cp ' + m + ' ' + destination_file)
+                #print destination_file + ' copied.'
+            else:
+                print destination_file + ' can\'t be created because a matching destination directory doesn\'t exist.'
 
 
 def deploy_map(map):
