@@ -11,7 +11,7 @@ eventlet.monkey_patch()
 
 
 class IVS3_Delete(invar.InvarUtility):
-    description = 'Delete a directory of images to S3 concurrently.'
+    description = 'Delete a directory of images on S3 concurrently.'
 
     def _init_common_parser(self):
         """

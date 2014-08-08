@@ -119,6 +119,19 @@ def reap_pngs_spare_grids(map):
     local(command)
 
 
+def extract_grids(rootpath, minzoom, maxzoom):
+    """
+    Grabs UTFGrid files from given zoom levels and puts them in a separate folder structure (matching original)
+    """
+    zoomrange = range(int(minzoom), int(maxzoom)+1)
+    for z in zoomrange:
+        command = 'find ' + rootpath + '/' + str(z) + '/ -name \'*.json\' -print | cpio -pvdumB ' + rootpath + '/extracted_grids_temp'
+        local(command)
+    #move whole shebang back out of full directory structure
+    local('mv ' + rootpath + '/extracted_grids_temp' + rootpath + ' ' + rootpath + '/extracted_grids')
+    local('rm -rf ' + rootpath + '/extracted_grids_temp')
+
+
 def deploy_map(map):
     """
     Deploys the rendered tiles to s3.
